@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@fb96ab2/dist/aframe-extras.min.js"></script>
+    <script src="js/cube-face-arranger.js"></script>
+    <title>Cube Geometry</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@fb96ab2/dist/aframe-extras.min.js"></script>
-  <script src="js/cube-face-arranger.js"></script>
-  <title>Cube Geometry</title>
-</head>
+  <body>
+    <!-- The code for the cube-face-arranger component is in js/cube-face-arranger -->
+    <a-scene>
+      <a-sky id="sky" color="#1A0A1A"></a-sky>
 
-<body>
-  <!-- The code for the cube-face-arranger component is in js/cube-face-arranger -->
-  <a-scene>
-    <a-sky id="sky" color="#1A0A2A"></a-sky>
-
-
-    <!-- 
+      <a-light color="#F0F0F0" position="-1 10 0"></a-light>
+      <a-light type="ambient" color="#202020"></a-light>
+      <!-- 
         We position our rig and the faces inside an element "cube-geometry"
       This element does not have a shape associated to it. It serves as a container only.
     
@@ -27,7 +27,7 @@
       If you see, initially, all faces are positioned overlapping at the origin (we do not specify position)
       -->
 
-    <!-- The cube-face-arranger component takes a property: currentFace
+      <!-- The cube-face-arranger component takes a property: currentFace
 
         You can try to change the currentFace property below to any number from 0 to 5. 
         See what happens in the console and study the code!
@@ -36,87 +36,123 @@
         in position 0 of the unfolding
       -->
 
-    <a-entity id="cube-geometry" cube-face-arranger="currentFace: 0">
-
-      <a-entity id="rig" movement-controls position="0 0 0">
-        <a-entity id="camera" camera="fov:55" position="0 1.6 0" look-controls></a-entity>
-      </a-entity>
-
-
-      <!-- Next are the faces-->
-      <!-- To better keep track of the rotation of the faces you might want to add some sub-shapes to the faces
-      to distinguish where the up is. For example you can add a cone that "points" in one specific direction. 
-
-      You may want to start by figuring out only the position, and then 
-      -->
-
-      <!-- FRONT(0) (green)-->
-      <a-entity id="face_0" geometry="primitive: plane; width: 10; height: 10" material="color: green; side: double"
-        rotation="90 0 0">
+      <a-entity id="cube-geometry" cube-face-arranger="currentFace: 0">
+        <a-entity id="rig" movement-controls position="0 0 0">
           <a-entity
-            id="cone0"
+            id="camera"
+            camera="fov:55"
+            position="0 1.6 0"
+            look-controls
+          ></a-entity>
+        </a-entity>
+
+        <!-- 
+        Faces of the cube
+        ```
+        *********  *********  *********  *********
+        *********  TOP(2)     *********  *********
+        LEFT(3)    FRONT(0)   RIGHT(1)   BACK(5)
+        *********  BOTTOM(4)  *********  *********
+        *********  *********  *********  *********
+        ``` 
+        -->
+        <a-entity id="face_0" class="face">
+          <a-entity
+            class="floor"
+            geometry="primitive: plane; width: 10; height: 10"
+            material="color: green; side: double; roughness: 1; metalness: 0"
+            rotation="90 0 0"
+          ></a-entity>
+          <a-entity
+            class="orientingCone"
             geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: green"
+            material="color: green; roughness: 0.1; metalness: 0.7"
+            rotation="90 0 0"
             position="0 0 -1"
           ></a-entity>
-      </a-entity>
+        </a-entity>
 
-      <!-- RIGHT(1) (orange) -->
-      <a-entity id="face_1" geometry="primitive: plane; width: 10; height: 10" material="color: orange; side: double"
-        rotation="90 0 0">
+        <a-entity id="face_1" class="face">
           <a-entity
-            id="cone1"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: orange"
-            position="0 0 -1"
-          ></a-entity>        
-      </a-entity>
-
-      <!-- TOP(2) (blue)-->
-      <a-entity id="face_2" geometry="primitive: plane; width: 10; height: 10" material="color: blue; side: double"
-        rotation="90 0 0">
+            class="floor"
+            geometry="primitive: plane; width: 10; height: 10"
+            material="color: orange; side: double; roughness: 1; metalness: 0"
+            rotation="90 0 0"
+          ></a-entity>
           <a-entity
-            id="cone2"
+            class="orientingCone"
             geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: blue"
+            material="color: orange; roughness: 0.1; metalness: 0.7"
+            rotation="90 0 0"
             position="0 0 -1"
-          ></a-entity> 
-      </a-entity>
+          ></a-entity>
+        </a-entity>
 
-      <!-- LEFT(3) (yellow)-->
-      <a-entity id="face_3" geometry="primitive: plane; width: 10; height: 10" material="color: yellow; side: double"
-        rotation="90 0 0">
+        <a-entity id="face_2" class="face">
           <a-entity
-            id="cone3"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: yellow"
-            position="0 0 -1"
-          ></a-entity> 
-      </a-entity>
-
-      <!-- BOTTOM(4) (pink)-->
-      <a-entity id="face_4" geometry="primitive: plane; width: 10; height: 10" material="color: pink; side: double"
-        rotation="90 0 0">
+            class="floor"
+            geometry="primitive: plane; width: 10; height: 10"
+            material="color: blue; side: double; roughness: 1; metalness: 0"
+            rotation="90 0 0"
+          ></a-entity>
           <a-entity
-            id="cone4"
+            class="orientingCone"
             geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: pink"
+            material="color: blue; roughness: 0.1; metalness: 0.7"
+            rotation="90 0 0"
             position="0 0 -1"
-          ></a-entity> 
-      </a-entity>
+          ></a-entity>
+        </a-entity>
 
-      <!-- BACK(5) (red) -->
-      <a-entity id="face_5" geometry="primitive: plane; width: 10; height: 10" material="color: red; side: double"
-        rotation="90 0 0">
+        <a-entity id="face_3" class="face">
           <a-entity
-            id="cone5"
+            class="floor"
+            geometry="primitive: plane; width: 10; height: 10"
+            material="color: yellow; side: double; roughness: 1; metalness: 0"
+            rotation="90 0 0"
+          >
+          </a-entity>
+          <a-entity
+            id="orientingCone"
             geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: red"
+            material="color: yellow; roughness: 0.1; metalness: 0.7"
+            rotation="90 0 0"
             position="0 0 -1"
-          ></a-entity> 
-      </a-entity>
-    </a-entity>
-  </a-scene>
-</body>
+          ></a-entity>
+        </a-entity>
 
+        <a-entity id="face_4" class="face">
+          <a-entity
+            class="floor"
+            geometry="primitive: plane; width: 10; height: 10"
+            material="color: pink; side: double; roughness: 1; metalness: 0"
+            rotation="90 0 0"
+          ></a-entity>
+          <a-entity
+            id="orientingCone"
+            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+            material="color: pink; roughness: 0.1; metalness: 0.7"
+            rotation="90 0 0"
+            position="0 0 -1"
+          ></a-entity>
+        </a-entity>
+        <a-entity id="face_5" class="face">
+          <a-entity
+            class="floor"
+            geometry="primitive: plane; width: 10; height: 10"
+            material="color: red; side: double;  roughness: 1; metalness: 0"
+            rotation="90 0 0"
+          >
+          </a-entity>
+          <a-entity
+            class="orientingCone"
+            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+            material="color: red; roughness: 0.1; metalness: 0.7"
+            rotation="90 0 0"
+            position="0 0 -1"
+          ></a-entity>
+        </a-entity>
+      </a-entity>
+    </a-scene>
+  </body>
 </html>
