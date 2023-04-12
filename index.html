@@ -9,30 +9,72 @@
     <title>A 2D Cube</title>
 
     <script src="js/cube-face-arranger.js"></script>
+    <script src="js/cube-face-tracker.js"></script>
+    <script src="js/controlled-position-sync.js"></script>
+    <script src="js/face-sync.js"></script>
   </head>
 
   <body>
-    <a-scene>
+    <a-scene cube-face-arranger="currentFace: 0">
       <a-sky id="sky" color="#1A0A1A"></a-sky>
 
       <a-light color="#F0F0F0" position="-1 10 0"></a-light>
       <a-light type="ambient" color="#202020"></a-light>
 
-      <a-entity id="cube-geometry" cube-face-arranger="currentFace: 0">
-
-
-        <a-entity id="avatar" movement-controls look-controls>
-          <a-entity id="head"  geometry="primitive: sphere; radius: 0.4" position="0 1.42 0.0" material="color: #c9baba">
-            <a-entity id="camera" camera="fov: 55" position="-0.0073 0.13319 -0.35693" data-aframe-inspector-original-camera=""></a-entity>
-            <a-entity id="eyeR" geometry="primitive: sphere; radius: 0.06" material="color: #3c1616" position="0.21243 0.15276 -0.3124"></a-entity>
-            <a-entity id="eyeR" geometry="primitive: sphere; radius: 0.06" material="color: #3c1616" position="-0.212 0.153 -0.312"></a-entity>
-            <a-entity id="nose" geometry="primitive: cone; height: 0.2; radiusBottom: 0.1" rotation="-90 0 0" position="0 0 -0.4" material="color: #373434; metalness: 0.66"></a-entity>
+       
+        <a-entity id="rig" movement-controls>
+          <a-entity
+              id="camera"
+              look-controls
+              camera="fov: 55"
+              position="0 1.42 0"
+            >
+              <script>
+                // DEBUG  
+                const rig = document.currentScript.closest("#rig");
+                const camera = document.currentScript.closest("#camera");
+              </script>
+              
+            </a-entity>
           </a-entity>
-        </a-entity>
+  
 
-        <a-entity id="rig" position="0 0 0">
-          
-        </a-entity>
+          <a-entity id="avatar" face-sync visible="false" position="0 0 0">
+            <a-entity
+                id="head"
+                geometry="primitive: sphere; radius: 0.4"
+                position="0 1.5 +0.35693"
+                material="color: #c9baba"
+              >
+                <a-entity
+                  id="eyeR"
+                  geometry="primitive: sphere; radius: 0.06"
+                  material="color: #3c1616"
+                  position="0.21243 0.15276 -0.3124"
+                ></a-entity>
+                <a-entity
+                  id="eyeR"
+                  geometry="primitive: sphere; radius: 0.06"
+                  material="color: #3c1616"
+                  position="-0.212 0.153 -0.312"
+                ></a-entity>
+                <a-entity
+                  id="nose"
+                  geometry="primitive: cone; height: 0.2; radiusBottom: 0.1"
+                  rotation="-90 0 0"
+                  position="0 0 -0.4"
+                  material="color: #373434; metalness: 0.66"
+                ></a-entity>
+              </a-entity>
+            <script>
+              // For debugging purposes
+              // set global variable avatar to point to this avatar
+              const avatar = document.currentScript.closest("#avatar");
+            </script>
+          </a-entity>
+
+
+
 
         <!-- 
         Faces of the cube
@@ -124,6 +166,7 @@
             position="0 0 -1"
           ></a-entity>
         </a-entity>
+
         <a-entity id="face_5" class="face">
           <a-entity
             class="floor"
@@ -140,7 +183,12 @@
             position="0 0 -1"
           ></a-entity>
         </a-entity>
-      </a-entity>
+        <script>
+          const faces = document
+            .querySelector("a-scene")
+            .querySelectorAll(".face");
+        </script>
+      
     </a-scene>
   </body>
 </html>
