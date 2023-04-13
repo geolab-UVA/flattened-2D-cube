@@ -26,14 +26,27 @@ AFRAME.registerComponent("controlled-face-tracker", {
 
   update: function(t,dt){
     this.avatar=this.data.avatar;
-    this.authoritativeFaces=this.el.sceneEl.querySelectorAll("[face]");
+    this.authoritativeFaces=this.el.sceneEl.querySelectorAll("[main-face]");
     this.rig=this.data.rig;
     this.camera=this.data.camera;
     this.el.currentFace=this.data.currentFace;
   },
+
+  teleport2: function (t,dt){
+    [this.rig.object3D.position,this.rig.object3D.rotation, this.el.currentFace]=faceTransitionFuction(this.rig.object3D.position,this.rig.object3D.rotation,this.el.currentFace);
+
+  },
   teleport: function (t,dt){
     let position = this.rig.object3D.position;
     let rotation = this.rig.object3D.rotation;
+
+    const newPosition = new THREE.Vector3();
+    newPosition.copy(position);
+    const newRotation = new THREE.Euler();
+    newRotation.copy(rotation);
+    let newCurrentFace=this.el.currentFace;
+
+    
     // Teleport function
     switch (this.el.currentFace) {
       case 0:
@@ -169,8 +182,8 @@ AFRAME.registerComponent("controlled-face-tracker", {
         }
         break;
     }
-  }
-  ,
+  },
+  
   tick: function (t, dt) {
     this.teleport(t,dt);
 
