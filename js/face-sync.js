@@ -3,27 +3,29 @@ AFRAME.registerComponent("face-sync", {
   // https://aframe.io/docs/1.4.0/core/component.html#schema
   schema: {
     controlledElement: { type: "selector", default: null },
-    currentFace: {type: "string", default:"face_0" }
+    currentFace: {type: "int", default: 0 }
   },
 
   init: function () {
-    this.faces=this.el.sceneEl.querySelectorAll(".face");
-    this.el.currentFace=this.data.currentFace;
-    this.elements=[];
+    this.faces=this.el.sceneEl.querySelectorAll("[face]");
+    this.elToClone=this.el.querySelector("[face-sync-target]");
+    this.mainElement=this.el;
+
+    this.controlledElements=[];
+
     for (face of faces){
-      let elClone=this.el.cloneNode(true);
-      elClone.removeAttribute("face-sync")
-      elClone.removeAttribute("cube-face-tracker")
-      elClone.id=elClone.id+"--"+face.id;
-      elClone.currentFace=face.id;
+      let elClone=this.elToClone.cloneNode(true);
       face.appendChild(elClone);
-      this.elements.push(elClone);
+      this.controlledElements.push(elClone);
+      elClone.currentFace=face.face;
     }
   
 
     this.throttledDebug = AFRAME.utils.throttle(this.debug, 1000, this);
     
   },
+
+  update: function(t,dt){this.el.currentFace=this.data.currentFace;},
 
   tick: function (t, dt) {
     this.syncPositionVisibility(t,dt);
@@ -38,7 +40,8 @@ AFRAME.registerComponent("face-sync", {
     let Rx=this.el.object3D.rotation.x;
     let Ry=this.el.object3D.rotation.y;
     let Rz=this.el.object3D.rotation.z;
-    for (el of this.elements){
+
+    for (el of this.controlledElements){
        el.object3D.position.x=x;
        el.object3D.position.y=y;
        el.object3D.position.z=z;

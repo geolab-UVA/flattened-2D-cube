@@ -9,151 +9,185 @@
         ``` 
 */
 
-AFRAME.registerComponent("cube-face-tracker", {
-  init: function () {
-    this.throttledDebug = AFRAME.utils.throttle(this.debug, 1000, this);
+AFRAME.registerComponent("controlled-face-tracker", {
+  schema: {
+    rig: {type: "selector", default: ".rig" },
+    camera: {type: "selector", default: ".rig > .camera" },
+    avatar: {type: "selector", default: "#avatar" },
+    currentFace: {type: "int", default: 0 }
   },
 
-  tick: function (t, dt) {
-    let position = this.el.object3D.position;
-    let rotation = this.el.object3D.rotation;
+  init: function () {
+    this.throttledDebug = AFRAME.utils.throttle(this.debug, 1000, this);
+    
+    
+    
+  },
 
+  update: function(t,dt){
+    this.avatar=this.data.avatar;
+    this.authoritativeFaces=this.el.sceneEl.querySelectorAll("[face]");
+    this.rig=this.data.rig;
+    this.camera=this.data.camera;
+    this.el.currentFace=this.data.currentFace;
+  },
+  teleport: function (t,dt){
+    let position = this.rig.object3D.position;
+    let rotation = this.rig.object3D.rotation;
     // Teleport function
     switch (this.el.currentFace) {
-      case "face_0":
+      case 0:
         switch (true) {
           case position.x > 5:
             [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = "face_1";
+            this.el.currentFace = 1;
             break;
           case position.z < -5:
             [position.x, position.z] = [position.x, position.z + 10];
-            this.el.currentFace = "face_2";
+            this.el.currentFace = 2;
             break;
           case position.x < -5:
             [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = "face_3";
+            this.el.currentFace = 3;
             break;
           case position.z > 5:
             [position.x, position.z] = [position.x, position.z - 10];
-            this.el.currentFace = "face_4";
+            this.el.currentFace = 4;
             break;
         }
         break;
-      case "face_1":
+      case 1:
         switch (true) {
           case position.x > 5:
             [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = "face_5";
+            this.el.currentFace = 5;
             break;
           case position.z < -5:
             [position.x, position.z] = [10 + position.z, -position.x];
             rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = "face_2";
+            this.el.currentFace = 2;
             break;
           case position.x < -5:
             [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = "face_0";
+            this.el.currentFace = 0;
             break;
           case position.z > 5:
             [position.x, position.z] = [10 - position.z, position.x];
             rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = "face_4";
+            this.el.currentFace = 4;
             break;
         }
         break;
-      case "face_2":
+      case 2:
         switch (true) {
           case position.x > 5:
             [position.x, position.z] = [-position.z, position.x - 10];
             rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = "face_1";
+            this.el.currentFace = 1;
             break;
           case position.z < -5:
             [position.x, position.z] = [-position.x, -10 - position.z];
             rotation.y = rotation.y + Math.PI;
-            this.el.currentFace = "face_5";
+            this.el.currentFace = 5;
             break;
           case position.x < -5:
             [position.x, position.z] = [position.z, -position.x - 10];
             rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = "face_3";
+            this.el.currentFace = 3;
             break;
           case position.z > 5:
             [position.x, position.z] = [position.x, position.z - 10];
-            this.el.currentFace = "face_0";
+            this.el.currentFace = 0;
             break;
         }
         break;
-      case "face_3":
+      case 3:
         switch (true) {
           case position.x > 5:
             [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = "face_0";
+            this.el.currentFace = 0;
             break;
           case position.z < -5:
             [position.x, position.z] = [-position.z - 10, position.x];
             rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = "face_2";
+            this.el.currentFace = 2;
             break;
           case position.x < -5:
             [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = "face_5";
+            this.el.currentFace = 5;
             break;
           case position.z > 5:
             [position.x, position.z] = [position.z - 10, -position.x];
             rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = "face_4";
+            this.el.currentFace = 4;
             break;
         }
         break;
-      case "face_4":
+      case 4:
         switch (true) {
           case position.x > 5:
             [position.x, position.z] = [position.z, -position.x + 10];
             rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = "face_1";
+            this.el.currentFace = 1;
             break;
           case position.z < -5:
             [position.x, position.z] = [position.x, position.z + 10];
-            this.el.currentFace = "face_0";
+            this.el.currentFace = 0;
             break;
           case position.x < -5:
             [position.x, position.z] = [-position.z, position.x + 10];
             rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = "face_3";
+            this.el.currentFace = 3;
             break;
           case position.z > 5:
             [position.x, position.z] = [-position.x, -position.z + 10];
             rotation.y = rotation.y + Math.PI;
-            this.el.currentFace = "face_5";
+            this.el.currentFace = 5;
             break;
         }
         break;
-      case "face_5":
+      case 5:
         switch (true) {
           case position.x > 5:
             [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = "face_3";
+            this.el.currentFace = 3;
             break;
           case position.z < -5:
             [position.x, position.z] = [-position.x, -position.z - 10];
             rotation.y = rotation.y - Math.PI;
-            this.el.currentFace = "face_2";
+            this.el.currentFace = 2;
             break;
           case position.x < -5:
             [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = "face_1";
+            this.el.currentFace = 1;
             break;
           case position.z > 5:
             [position.x, position.z] = [-position.x, -position.z + 10];
             rotation.y = rotation.y - Math.PI;
-            this.el.currentFace = "face_4";
+            this.el.currentFace = 4;
             break;
         }
         break;
     }
-    this.throttledDebug(this.el.currentFace);
+  }
+  ,
+  tick: function (t, dt) {
+    this.teleport(t,dt);
+
+    this.el.object3D.position.copy(this.authoritativeFaces[this.el.currentFace].object3D.position);
+    this.el.object3D.rotation.copy(this.authoritativeFaces[this.el.currentFace].object3D.rotation);
+        
+
+
+  
+    
+    this.avatar.object3D.position.copy(this.camera.object3D.position);
+    this.avatar.object3D.position.add(this.rig.object3D.position);
+    
+    this.avatar.object3D.quaternion.copy(this.camera.object3D.quaternion);
+    this.avatar.object3D.quaternion.multiply(this.rig.object3D.quaternion);
+
+    this.avatar.currentFace=this.el.currentFace;
     // DEBUG
     // this.throttledDebug(["x = " + x, "z = " + z, "currentFace = " + this.el.currentFace]);
   },
