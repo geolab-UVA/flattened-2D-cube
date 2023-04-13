@@ -22,7 +22,7 @@
       <a-light type="ambient" color="#202020"></a-light>
 
        
-        <a-entity id="rig" movement-controls>
+        <a-entity id="rig" position = "0 35 0" rotation = "-90 0 0 " >
           <a-entity
               id="camera"
               look-controls
@@ -39,7 +39,7 @@
           </a-entity>
   
 
-          <a-entity id="avatar" face-sync visible="false" position="0 0 0">
+          <a-entity id="avatar" wasd-controls face-sync cube-face-tracker visible="false" position="0 0 0">
             <a-entity
                 id="head"
                 geometry="primitive: sphere; radius: 0.4"

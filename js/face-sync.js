@@ -8,11 +8,12 @@ AFRAME.registerComponent("face-sync", {
 
   init: function () {
     this.faces=this.el.sceneEl.querySelectorAll(".face");
-    this.currentFace=this.data.currentFace;
+    this.el.currentFace=this.data.currentFace;
     this.elements=[];
     for (face of faces){
       let elClone=this.el.cloneNode(true);
       elClone.removeAttribute("face-sync")
+      elClone.removeAttribute("cube-face-tracker")
       elClone.id=elClone.id+"--"+face.id;
       elClone.currentFace=face.id;
       face.appendChild(elClone);
@@ -25,6 +26,12 @@ AFRAME.registerComponent("face-sync", {
   },
 
   tick: function (t, dt) {
+    this.syncPositionVisibility(t,dt);
+   
+  },
+
+  
+  syncPositionVisibility: function (t,dt){
     let x=this.el.object3D.position.x;
     let y=this.el.object3D.position.y;
     let z=this.el.object3D.position.z;
@@ -38,14 +45,10 @@ AFRAME.registerComponent("face-sync", {
        el.object3D.rotation.x=Rx;
        el.object3D.rotation.y=Ry;
        el.object3D.rotation.z=Rz;
-       if (this.currentFace==el.currentFace){
+       if (this.el.currentFace==el.currentFace){
         el.object3D.visible=true;
        } else {el.object3D.visible=false;}
     }
-  },
-
-  
-  syncPosition: function (t,dt){
   },
 
 
