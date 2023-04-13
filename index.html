@@ -15,173 +15,183 @@
     <script src="js/face.js"></script>
   </head>
 
+
   <body>
+    <script>
+      const totalFaces = 6;
+
+      faceTransitionFuction = function (position, rotation, currentFace) {
+          let newCurrentFace=currentFace;
+
+          // Teleport function
+          switch (currentFace) {
+            case 0:
+              switch (true) {
+                case position.x > 5:
+                  [position.x, position.z] = [position.x - 10, position.z];
+                  newCurrentFace = 1;
+                  break;
+                case position.z < -5:
+                  [position.x, position.z] = [position.x, position.z + 10];
+                  newCurrentFace = 2;
+                  break;
+                case position.x < -5:
+                  [position.x, position.z] = [position.x + 10, position.z];
+                  newCurrentFace = 3;
+                  break;
+                case position.z > 5:
+                  [position.x, position.z] = [position.x, position.z - 10];
+                  newCurrentFace = 4;
+                  break;
+              }
+              break;
+            case 1:
+              switch (true) {
+                case position.x > 5:
+                  [position.x, position.z] = [position.x - 10, position.z];
+                  newCurrentFace = 5;
+                  break;
+                case position.z < -5:
+                  [position.x, position.z] = [10 + position.z, -position.x];
+                  rotation.y = rotation.y + Math.PI / 2;
+                  newCurrentFace = 2;
+                  break;
+                case position.x < -5:
+                  [position.x, position.z] = [position.x + 10, position.z];
+                  newCurrentFace = 0;
+                  break;
+                case position.z > 5:
+                  [position.x, position.z] = [10 - position.z, position.x];
+                  rotation.y = rotation.y - Math.PI / 2;
+                  newCurrentFace = 4;
+                  break;
+              }
+              break;
+            case 2:
+              switch (true) {
+                case position.x > 5:
+                  [position.x, position.z] = [-position.z, position.x - 10];
+                  rotation.y = rotation.y - Math.PI / 2;
+                  newCurrentFace = 1;
+                  break;
+                case position.z < -5:
+                  [position.x, position.z] = [
+                    -position.x,
+                    -10 - position.z,
+                  ];
+                  rotation.y = rotation.y + Math.PI;
+                  newCurrentFace = 5;
+                  break;
+                case position.x < -5:
+                  [position.x, position.z] = [position.z, -position.x - 10];
+                  rotation.y = rotation.y + Math.PI / 2;
+                  newCurrentFace = 3;
+                  break;
+                case position.z > 5:
+                  [position.x, position.z] = [position.x, position.z - 10];
+                  newCurrentFace = 0;
+                  break;
+              }
+              break;
+            case 3:
+              switch (true) {
+                case position.x > 5:
+                  [position.x, position.z] = [position.x - 10, position.z];
+                  newCurrentFace = 0;
+                  break;
+                case position.z < -5:
+                  [position.x, position.z] = [-position.z - 10, position.x];
+                  rotation.y = rotation.y - Math.PI / 2;
+                  newCurrentFace = 2;
+                  break;
+                case position.x < -5:
+                  [position.x, position.z] = [position.x + 10, position.z];
+                  newCurrentFace = 5;
+                  break;
+                case position.z > 5:
+                  [position.x, position.z] = [position.z - 10, -position.x];
+                  rotation.y = rotation.y + Math.PI / 2;
+                  newCurrentFace = 4;
+                  break;
+              }
+              break;
+            case 4:
+              switch (true) {
+                case position.x > 5:
+                  [position.x, position.z] = [position.z, -position.x + 10];
+                  rotation.y = rotation.y + Math.PI / 2;
+                  newCurrentFace = 1;
+                  break;
+                case position.z < -5:
+                  [position.x, position.z] = [position.x, position.z + 10];
+                  newCurrentFace = 0;
+                  break;
+                case position.x < -5:
+                  [position.x, position.z] = [-position.z, position.x + 10];
+                  rotation.y = rotation.y - Math.PI / 2;
+                  newCurrentFace = 3;
+                  break;
+                case position.z > 5:
+                  [position.x, position.z] = [
+                    -position.x,
+                    -position.z + 10,
+                  ];
+                  rotation.y = rotation.y + Math.PI;
+                  newCurrentFace = 5;
+                  break;
+              }
+              break;
+            case 5:
+              switch (true) {
+                case position.x > 5:
+                  [position.x, position.z] = [position.x - 10, position.z];
+                  newCurrentFace = 3;
+                  break;
+                case position.z < -5:
+                  [position.x, position.z] = [
+                    -position.x,
+                    -position.z - 10,
+                  ];
+                  rotation.y = rotation.y - Math.PI;
+                  newCurrentFace = 2;
+                  break;
+                case position.x < -5:
+                  [position.x, position.z] = [position.x + 10, position.z];
+                  newCurrentFace = 1;
+                  break;
+                case position.z > 5:
+                  [position.x, position.z] = [
+                    -position.x,
+                    -position.z + 10,
+                  ];
+                  rotation.y = rotation.y - Math.PI;
+                  newCurrentFace = 4;
+                  break;
+              }
+              break;
+          }
+          return [position, rotation, newCurrentFace]
+        };
+    
+    </script>
+    <!-- 
+    Faces of the cube
+    ```
+    *********  *********  *********  *********
+    *********  TOP(2)     *********  *********
+    LEFT(3)    FRONT(0)   RIGHT(1)   BACK(5)
+    *********  BOTTOM(4)  *********  *********
+    *********  *********  *********  *********
+    ``` 
+    -->
+
     <a-scene>
       <a-sky id="sky" color="#1A0A1A"></a-sky>
 
       <a-light color="#F0F0F0" position="-1 10 0"></a-light>
       <a-light type="ambient" color="#202020"></a-light>
 
-      <a-entity>
-        <script>
-          const totalFaces = 6;
-
-          faceTransitionFuction = function (position, rotation, currentFace) {
-            const newPosition = new THREE.Vector3();
-            newPosition.copy(position);
-            const newRotation = new THREE.Euler();
-            newRotation.copy(rotation);
-            let newCurrentFace=currentFace;
-
-            // Teleport function
-            switch (currentFace) {
-              case 0:
-                switch (true) {
-                  case position.x > 5:
-                    [newPosition.x, newPosition.z] = [position.x - 10, position.z];
-                    newCurrentFace = 1;
-                    break;
-                  case position.z < -5:
-                    [newPosition.x, newPosition.z] = [position.x, position.z + 10];
-                    newCurrentFace = 2;
-                    break;
-                  case position.x < -5:
-                    [newPosition.x, newPosition.z] = [position.x + 10, position.z];
-                    newCurrentFace = 3;
-                    break;
-                  case position.z > 5:
-                    [newPosition.x, newPosition.z] = [position.x, position.z - 10];
-                    newCurrentFace = 4;
-                    break;
-                }
-                break;
-              case 1:
-                switch (true) {
-                  case position.x > 5:
-                    [newPosition.x, newPosition.z] = [position.x - 10, position.z];
-                    newCurrentFace = 5;
-                    break;
-                  case position.z < -5:
-                    [newPosition.x, newPosition.z] = [10 + position.z, -position.x];
-                    newRotation.y = newRotation.y + Math.PI / 2;
-                    newCurrentFace = 2;
-                    break;
-                  case position.x < -5:
-                    [newPosition.x, newPosition.z] = [position.x + 10, position.z];
-                    newCurrentFace = 0;
-                    break;
-                  case position.z > 5:
-                    [newPosition.x, newPosition.z] = [10 - position.z, position.x];
-                    newRotation.y = newRotation.y - Math.PI / 2;
-                    newCurrentFace = 4;
-                    break;
-                }
-                break;
-              case 2:
-                switch (true) {
-                  case position.x > 5:
-                    [newPosition.x, newPosition.z] = [-position.z, position.x - 10];
-                    newRotation.y = newRotation.y - Math.PI / 2;
-                    newCurrentFace = 1;
-                    break;
-                  case position.z < -5:
-                    [newPosition.x, newPosition.z] = [-position.x, -10 - position.z];
-                    newRotation.y = newRotation.y + Math.PI;
-                    newCurrentFace = 5;
-                    break;
-                  case position.x < -5:
-                    [newPosition.x, newPosition.z] = [position.z, -position.x - 10];
-                    newRotation.y = newRotation.y + Math.PI / 2;
-                    newCurrentFace = 3;
-                    break;
-                  case position.z > 5:
-                    [newPosition.x, newPosition.z] = [position.x, position.z - 10];
-                    newCurrentFace = 0;
-                    break;
-                }
-                break;
-              case 3:
-                switch (true) {
-                  case position.x > 5:
-                    [newPosition.x, newPosition.z] = [position.x - 10, position.z];
-                    newCurrentFace = 0;
-                    break;
-                  case position.z < -5:
-                    [newPosition.x, newPosition.z] = [-position.z - 10, position.x];
-                    newRotation.y = newRotation.y - Math.PI / 2;
-                    newCurrentFace = 2;
-                    break;
-                  case position.x < -5:
-                    [newPosition.x, newPosition.z] = [position.x + 10, position.z];
-                    newCurrentFace = 5;
-                    break;
-                  case position.z > 5:
-                    [newPosition.x, newPosition.z] = [position.z - 10, -position.x];
-                    newRotation.y = newRotation.y + Math.PI / 2;
-                    newCurrentFace = 4;
-                    break;
-                }
-                break;
-              case 4:
-                switch (true) {
-                  case position.x > 5:
-                    [newPosition.x, newPosition.z] = [position.z, -position.x + 10];
-                    newRotation.y = newRotation.y + Math.PI / 2;
-                    newCurrentFace = 1;
-                    break;
-                  case position.z < -5:
-                    [newPosition.x, newPosition.z] = [position.x, position.z + 10];
-                    newCurrentFace = 0;
-                    break;
-                  case position.x < -5:
-                    [newPosition.x, newPosition.z] = [-position.z, position.x + 10];
-                    newRotation.y = newRotation.y - Math.PI / 2;
-                    newCurrentFace = 3;
-                    break;
-                  case position.z > 5:
-                    [newPosition.x, newPosition.z] = [-position.x, -position.z + 10];
-                    newRotation.y = newRotation.y + Math.PI;
-                    newCurrentFace = 5;
-                    break;
-                }
-                break;
-              case 5:
-                switch (true) {
-                  case position.x > 5:
-                    [newPosition.x, newPosition.z] = [position.x - 10, position.z];
-                    newCurrentFace = 3;
-                    break;
-                  case position.z < -5:
-                    [newPosition.x, newPosition.z] = [-position.x, -position.z - 10];
-                    newRotation.y = newRotation.y - Math.PI;
-                    newCurrentFace = 2;
-                    break;
-                  case position.x < -5:
-                    [newPosition.x, newPosition.z] = [position.x + 10, position.z];
-                    newCurrentFace = 1;
-                    break;
-                  case position.z > 5:
-                    [newPosition.x, newPosition.z] = [-position.x, -position.z + 10];
-                    newRotation.y = newRotation.y - Math.PI;
-                    newCurrentFace = 4;
-                    break;
-                }
-                break;
-            }
-          return [newPosition,newRotation,newCurrentFace];
-          };
-        </script>
-        <!-- 
-        Faces of the cube
-        ```
-        *********  *********  *********  *********
-        *********  TOP(2)     *********  *********
-        LEFT(3)    FRONT(0)   RIGHT(1)   BACK(5)
-        *********  BOTTOM(4)  *********  *********
-        *********  *********  *********  *********
-        ``` 
-        -->
-
+      <a-entity id="unwrapping-container">
         <a-entity face="face: 0" main-face position="0 0 0">
           <a-entity
             class="floor"
@@ -280,7 +290,7 @@
           ></a-entity>
         </a-entity>
 
-        <a-entity face="face: 5" position="0 0 -22" rotation="0 90 0">
+        <a-entity face="face: 5" position="0 0 -22" rotation="0 -180 0">
           <a-entity
             class="floor"
             geometry="primitive: plane; width: 10; height: 10"
@@ -372,7 +382,7 @@
         </a-entity>
       </a-entity>
 
-      <a-entity controlled-face-tracker>
+      <a-entity id="rig-teleporter" controlled-face-tracker>
         <a-entity
           id="rig"
           class="rig"
