@@ -15,16 +15,13 @@
   <script src="js/face-arranger.js"></script>
   <script src="js/face-clipping.js"></script>
 
-  <script src="js/face.js"></script>
   <script src="js/face-tracker.js"></script>
-  <script src="js/face-sync.js"></script>
-
+  <script src="js/face-camera-teleporter.js"></script>
 
 
   <script src="js/custom-motion.js"></script>
 
-  <script src="js/cube-face-arranger.js"></script>
-  <script src="js/controlled-face-tracker.js"></script>
+  
 
 </head>
 
@@ -38,7 +35,7 @@
     <a-light color="#F0F0F0" position="-1 10 0"></a-light>
     <a-light type="ambient" color="#202020"></a-light>
 
-    <a-entity face-arranger="currentFace: 0">
+    <a-entity face-arranger="currentCenterFace: 0">
 
       <a-entity face-arrangement="centerFace: 0">
         <a-entity face-proxy="face: #face-0" position="0 0 0" rotation="0 0 0"></a-entity>
@@ -88,6 +85,7 @@
         <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 90 0">
         </a-entity>
       </a-entity>
+
       <a-entity face-arrangement="centerFace: 2">
         <a-entity face-proxy="face: #face-2" position="0 0 0" rotation="0 0 0">
         </a-entity>
@@ -100,6 +98,7 @@
         <a-entity face-proxy="face: #face-0" position="0 0 10" rotation="0 0 0">
         </a-entity>
       </a-entity>
+
       <a-entity face-arrangement="centerFace: 3">
         <a-entity face-proxy="face: #face-3" position="0 0 0" rotation="0 0 0">
         </a-entity>
@@ -112,6 +111,7 @@
         <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 -90 0">
         </a-entity>
       </a-entity>
+
       <a-entity face-arrangement="centerFace: 4">
         <a-entity face-proxy="face: #face-4" position="0 0 0" rotation="0 0 0">
         </a-entity>
@@ -124,6 +124,7 @@
         <a-entity face-proxy="face: #face-5" position="0 0 10" rotation="0 180 0">
         </a-entity>
       </a-entity>
+
       <a-entity face-arrangement="centerFace: 5">
         <a-entity face-proxy="face: #face-5" position="0 0 0" rotation="0 0 0">
         </a-entity>
@@ -186,31 +187,10 @@
     </a-entity>
 
 
-    <a-entity id="avatar" current-face="currentFace:0" custom-motion="velocity: 0.02 0 -0.05" visible="false"
-      position="0 1 0">
-      <a-entity face-sync-object>
-        <a-entity id="head" geometry="primitive: sphere; radius: 0.4" position="0 -0.2 +0.45" material="color: #c9baba">
-          <a-entity id="eyeR" geometry="primitive: sphere; radius: 0.06" material="color: #3c1616"
-            position="0.21243 0.15276 -0.3124"></a-entity>
-          <a-entity id="eyeR" geometry="primitive: sphere; radius: 0.06" material="color: #3c1616"
-            position="-0.212 0.153 -0.312"></a-entity>
-          <a-entity id="nose" geometry="primitive: cone; height: 0.15; radiusBottom: 0.1" rotation="-90 0 0"
-            position="0 0 -0.4" material="color: #373434; metalness: 0.66"></a-entity>
-        </a-entity>
-      </a-entity>
 
 
-
-
-
-    </a-entity>
-
-
-
-
-
-    <a-entity id="rig" class="rig" movement-controls position="0 0 0" rotation="0 0 0 ">
-      <a-entity id="camera" class="camera" look-controls camera="fov: 55" position="0 1.42 0">
+    <a-entity id="rig" movement-controls position="0 0 0" rotation="0 0 0" debug face-camera-teleporter>
+      <a-entity id="camera" look-controls camera="fov: 55" position="0 1.42 0">
       </a-entity>
     </a-entity>
 

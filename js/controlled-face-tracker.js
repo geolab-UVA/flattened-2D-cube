@@ -11,9 +11,8 @@
 
 AFRAME.registerComponent("controlled-face-tracker", {
   schema: {
-    rig: {type: "selector", default: ".rig" },
-    camera: {type: "selector", default: ".rig > .camera" },
-    avatar: {type: "selector", default: "#avatar" },
+    rig: {type: "selector", default: "#rig" },
+    camera: {type: "selector", default: "#rig > #camera" },
     currentFace: {type: "int", default: 0 }
   },
 

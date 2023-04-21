@@ -17,8 +17,6 @@ AFRAME.registerComponent("current-face", {
     });
 
   },
-
-  update: function (t, dt) { },
 });
 
 AFRAME.registerComponent("face-teleporter", {
