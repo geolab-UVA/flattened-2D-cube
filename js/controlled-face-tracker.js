@@ -19,9 +19,6 @@ AFRAME.registerComponent("controlled-face-tracker", {
 
   init: function () {
     this.throttledDebug = AFRAME.utils.throttle(this.debug, 1000, this);
-    
-    
-    
   },
 
   update: function(t,dt){
@@ -32,168 +29,18 @@ AFRAME.registerComponent("controlled-face-tracker", {
     this.el.currentFace=this.data.currentFace;
   },
 
-  teleport2: function (t,dt){
+  teleport: function (t,dt){
     [this.rig.object3D.position,this.rig.object3D.rotation, this.el.currentFace]=faceTransitionFuction(this.rig.object3D.position,this.rig.object3D.rotation,this.el.currentFace);
 
   },
-  teleport: function (t,dt){
-    let position = this.rig.object3D.position;
-    let rotation = this.rig.object3D.rotation;
-
-    const newPosition = new THREE.Vector3();
-    newPosition.copy(position);
-    const newRotation = new THREE.Euler();
-    newRotation.copy(rotation);
-    let newCurrentFace=this.el.currentFace;
-
-    
-    // Teleport function
-    switch (this.el.currentFace) {
-      case 0:
-        switch (true) {
-          case position.x > 5:
-            [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = 1;
-            break;
-          case position.z < -5:
-            [position.x, position.z] = [position.x, position.z + 10];
-            this.el.currentFace = 2;
-            break;
-          case position.x < -5:
-            [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = 3;
-            break;
-          case position.z > 5:
-            [position.x, position.z] = [position.x, position.z - 10];
-            this.el.currentFace = 4;
-            break;
-        }
-        break;
-      case 1:
-        switch (true) {
-          case position.x > 5:
-            [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = 5;
-            break;
-          case position.z < -5:
-            [position.x, position.z] = [10 + position.z, -position.x];
-            rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = 2;
-            break;
-          case position.x < -5:
-            [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = 0;
-            break;
-          case position.z > 5:
-            [position.x, position.z] = [10 - position.z, position.x];
-            rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = 4;
-            break;
-        }
-        break;
-      case 2:
-        switch (true) {
-          case position.x > 5:
-            [position.x, position.z] = [-position.z, position.x - 10];
-            rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = 1;
-            break;
-          case position.z < -5:
-            [position.x, position.z] = [-position.x, -10 - position.z];
-            rotation.y = rotation.y + Math.PI;
-            this.el.currentFace = 5;
-            break;
-          case position.x < -5:
-            [position.x, position.z] = [position.z, -position.x - 10];
-            rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = 3;
-            break;
-          case position.z > 5:
-            [position.x, position.z] = [position.x, position.z - 10];
-            this.el.currentFace = 0;
-            break;
-        }
-        break;
-      case 3:
-        switch (true) {
-          case position.x > 5:
-            [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = 0;
-            break;
-          case position.z < -5:
-            [position.x, position.z] = [-position.z - 10, position.x];
-            rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = 2;
-            break;
-          case position.x < -5:
-            [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = 5;
-            break;
-          case position.z > 5:
-            [position.x, position.z] = [position.z - 10, -position.x];
-            rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = 4;
-            break;
-        }
-        break;
-      case 4:
-        switch (true) {
-          case position.x > 5:
-            [position.x, position.z] = [position.z, -position.x + 10];
-            rotation.y = rotation.y + Math.PI / 2;
-            this.el.currentFace = 1;
-            break;
-          case position.z < -5:
-            [position.x, position.z] = [position.x, position.z + 10];
-            this.el.currentFace = 0;
-            break;
-          case position.x < -5:
-            [position.x, position.z] = [-position.z, position.x + 10];
-            rotation.y = rotation.y - Math.PI / 2;
-            this.el.currentFace = 3;
-            break;
-          case position.z > 5:
-            [position.x, position.z] = [-position.x, -position.z + 10];
-            rotation.y = rotation.y + Math.PI;
-            this.el.currentFace = 5;
-            break;
-        }
-        break;
-      case 5:
-        switch (true) {
-          case position.x > 5:
-            [position.x, position.z] = [position.x - 10, position.z];
-            this.el.currentFace = 3;
-            break;
-          case position.z < -5:
-            [position.x, position.z] = [-position.x, -position.z - 10];
-            rotation.y = rotation.y - Math.PI;
-            this.el.currentFace = 2;
-            break;
-          case position.x < -5:
-            [position.x, position.z] = [position.x + 10, position.z];
-            this.el.currentFace = 1;
-            break;
-          case position.z > 5:
-            [position.x, position.z] = [-position.x, -position.z + 10];
-            rotation.y = rotation.y - Math.PI;
-            this.el.currentFace = 4;
-            break;
-        }
-        break;
-    }
-  },
-  
+ 
   tick: function (t, dt) {
     this.teleport(t,dt);
 
     this.el.object3D.position.copy(this.authoritativeFaces[this.el.currentFace].object3D.position);
     this.el.object3D.rotation.copy(this.authoritativeFaces[this.el.currentFace].object3D.rotation);
         
-
-
   
-    
     this.avatar.object3D.position.copy(this.camera.object3D.position);
     this.avatar.object3D.position.add(this.rig.object3D.position);
     

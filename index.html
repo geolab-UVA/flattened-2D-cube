@@ -1,410 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@fb96ab2/dist/aframe-extras.min.js"></script>
-    <title>A 2D Cube</title>
 
-    <script src="js/cube-face-arranger.js"></script>
-    <script src="js/controlled-face-tracker.js"></script>
-    <script src="js/face-tracker.js"></script>
-    <script src="js/face-sync.js"></script>
-    <script src="js/face.js"></script>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <script src="./vendor/aframe.min.js"></script>
+  <script src="./vendor/aframe-extras.min.js"></script>
+  <title>A 2D Cube</title>
+
+  <script src="js/throttled-log-function.js"></script>
+
+  <script src="js/face-proxy.js"></script>
+  <script src="js/face-arranger.js"></script>
+  <script src="js/face-clipping.js"></script>
+
+  <script src="js/face.js"></script>
+  <script src="js/face-tracker.js"></script>
+  <script src="js/face-sync.js"></script>
 
 
-  <body>
-    <script>
-      const totalFaces = 6;
 
-      faceTransitionFuction = function (position, rotation, currentFace) {
-          let newCurrentFace=currentFace;
+  <script src="js/custom-motion.js"></script>
 
-          // Teleport function
-          switch (currentFace) {
-            case 0:
-              switch (true) {
-                case position.x > 5:
-                  [position.x, position.z] = [position.x - 10, position.z];
-                  newCurrentFace = 1;
-                  break;
-                case position.z < -5:
-                  [position.x, position.z] = [position.x, position.z + 10];
-                  newCurrentFace = 2;
-                  break;
-                case position.x < -5:
-                  [position.x, position.z] = [position.x + 10, position.z];
-                  newCurrentFace = 3;
-                  break;
-                case position.z > 5:
-                  [position.x, position.z] = [position.x, position.z - 10];
-                  newCurrentFace = 4;
-                  break;
-              }
-              break;
-            case 1:
-              switch (true) {
-                case position.x > 5:
-                  [position.x, position.z] = [position.x - 10, position.z];
-                  newCurrentFace = 5;
-                  break;
-                case position.z < -5:
-                  [position.x, position.z] = [10 + position.z, -position.x];
-                  rotation.y = rotation.y + Math.PI / 2;
-                  newCurrentFace = 2;
-                  break;
-                case position.x < -5:
-                  [position.x, position.z] = [position.x + 10, position.z];
-                  newCurrentFace = 0;
-                  break;
-                case position.z > 5:
-                  [position.x, position.z] = [10 - position.z, position.x];
-                  rotation.y = rotation.y - Math.PI / 2;
-                  newCurrentFace = 4;
-                  break;
-              }
-              break;
-            case 2:
-              switch (true) {
-                case position.x > 5:
-                  [position.x, position.z] = [-position.z, position.x - 10];
-                  rotation.y = rotation.y - Math.PI / 2;
-                  newCurrentFace = 1;
-                  break;
-                case position.z < -5:
-                  [position.x, position.z] = [
-                    -position.x,
-                    -10 - position.z,
-                  ];
-                  rotation.y = rotation.y + Math.PI;
-                  newCurrentFace = 5;
-                  break;
-                case position.x < -5:
-                  [position.x, position.z] = [position.z, -position.x - 10];
-                  rotation.y = rotation.y + Math.PI / 2;
-                  newCurrentFace = 3;
-                  break;
-                case position.z > 5:
-                  [position.x, position.z] = [position.x, position.z - 10];
-                  newCurrentFace = 0;
-                  break;
-              }
-              break;
-            case 3:
-              switch (true) {
-                case position.x > 5:
-                  [position.x, position.z] = [position.x - 10, position.z];
-                  newCurrentFace = 0;
-                  break;
-                case position.z < -5:
-                  [position.x, position.z] = [-position.z - 10, position.x];
-                  rotation.y = rotation.y - Math.PI / 2;
-                  newCurrentFace = 2;
-                  break;
-                case position.x < -5:
-                  [position.x, position.z] = [position.x + 10, position.z];
-                  newCurrentFace = 5;
-                  break;
-                case position.z > 5:
-                  [position.x, position.z] = [position.z - 10, -position.x];
-                  rotation.y = rotation.y + Math.PI / 2;
-                  newCurrentFace = 4;
-                  break;
-              }
-              break;
-            case 4:
-              switch (true) {
-                case position.x > 5:
-                  [position.x, position.z] = [position.z, -position.x + 10];
-                  rotation.y = rotation.y + Math.PI / 2;
-                  newCurrentFace = 1;
-                  break;
-                case position.z < -5:
-                  [position.x, position.z] = [position.x, position.z + 10];
-                  newCurrentFace = 0;
-                  break;
-                case position.x < -5:
-                  [position.x, position.z] = [-position.z, position.x + 10];
-                  rotation.y = rotation.y - Math.PI / 2;
-                  newCurrentFace = 3;
-                  break;
-                case position.z > 5:
-                  [position.x, position.z] = [
-                    -position.x,
-                    -position.z + 10,
-                  ];
-                  rotation.y = rotation.y + Math.PI;
-                  newCurrentFace = 5;
-                  break;
-              }
-              break;
-            case 5:
-              switch (true) {
-                case position.x > 5:
-                  [position.x, position.z] = [position.x - 10, position.z];
-                  newCurrentFace = 3;
-                  break;
-                case position.z < -5:
-                  [position.x, position.z] = [
-                    -position.x,
-                    -position.z - 10,
-                  ];
-                  rotation.y = rotation.y - Math.PI;
-                  newCurrentFace = 2;
-                  break;
-                case position.x < -5:
-                  [position.x, position.z] = [position.x + 10, position.z];
-                  newCurrentFace = 1;
-                  break;
-                case position.z > 5:
-                  [position.x, position.z] = [
-                    -position.x,
-                    -position.z + 10,
-                  ];
-                  rotation.y = rotation.y - Math.PI;
-                  newCurrentFace = 4;
-                  break;
-              }
-              break;
-          }
-          return [position, rotation, newCurrentFace]
-        };
-    
-    </script>
-    <!-- 
-    Faces of the cube
-    ```
-    *********  *********  *********  *********
-    *********  TOP(2)     *********  *********
-    LEFT(3)    FRONT(0)   RIGHT(1)   BACK(5)
-    *********  BOTTOM(4)  *********  *********
-    *********  *********  *********  *********
-    ``` 
-    -->
+  <script src="js/cube-face-arranger.js"></script>
+  <script src="js/controlled-face-tracker.js"></script>
 
-    <a-scene>
-      <a-sky id="sky" color="#1A0A1A"></a-sky>
+</head>
 
-      <a-light color="#F0F0F0" position="-1 10 0"></a-light>
-      <a-light type="ambient" color="#202020"></a-light>
 
-      <a-entity id="unwrapping-container">
-        <a-entity face="face: 0" main-face position="0 0 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: green; side: double; roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          ></a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: green; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
+<body>
+  <script src="transition-function.js"></script>
 
-        <a-entity face="face: 1" main-face position="11 0 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: orange; side: double; roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          ></a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: orange; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
+  <a-scene fog="type: linear; color: #AAA; near: 2; far:50">
+    <a-sky id="sky" color="#1A0A1A"></a-sky>
 
-        <a-entity face="face: 2" main-face position="0 0 -11">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: blue; side: double; roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          ></a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: blue; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
+    <a-light color="#F0F0F0" position="-1 10 0"></a-light>
+    <a-light type="ambient" color="#202020"></a-light>
 
-        <a-entity face="face: 3" main-face position="-11 0 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: yellow; side: double; roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          >
-          </a-entity>
-          <a-entity
-            id="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: yellow; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
+    <a-entity face-arranger="currentFace: 0">
 
-        <a-entity face="face: 4" main-face position="0 0 11">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: pink; side: double; roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          ></a-entity>
-          <a-entity
-            id="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: pink; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
-
-        <a-entity face="face: 5" main-face position="22 0 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: red; side: double;  roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          >
-          </a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: red; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
-
-        <a-entity face="face: 5" position="0 0 -22" rotation="0 -180 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: red; side: double;  roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          >
-          </a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: red; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
-        <a-entity face="face: 5" position="-22 0 0" rotation="0 0 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: red; side: double;  roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          >
-          </a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: red; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
-        <a-entity face="face: 5" position="0 0 22" rotation="0 180 0">
-          <a-entity
-            class="floor"
-            geometry="primitive: plane; width: 10; height: 10"
-            material="color: red; side: double;  roughness: 1; metalness: 0"
-            rotation="90 0 0"
-          >
-          </a-entity>
-          <a-entity
-            class="orientingCone"
-            geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
-            material="color: red; roughness: 0.1; metalness: 0.7"
-            rotation="90 0 0"
-            position="0 0 -1"
-          ></a-entity>
-        </a-entity>
-
-        <script>
-          const faces = document
-            .querySelector("a-scene")
-            .querySelectorAll("[face]");
-        </script>
-
-        <a-entity id="avatar" face-sync visible="false" position="0 0 0">
-          <a-entity face-sync-target>
-            <a-entity
-              id="head"
-              geometry="primitive: sphere; radius: 0.4"
-              position="0 -0.2 +0.45"
-              material="color: #c9baba"
-            >
-              <a-entity
-                id="eyeR"
-                geometry="primitive: sphere; radius: 0.06"
-                material="color: #3c1616"
-                position="0.21243 0.15276 -0.3124"
-              ></a-entity>
-              <a-entity
-                id="eyeR"
-                geometry="primitive: sphere; radius: 0.06"
-                material="color: #3c1616"
-                position="-0.212 0.153 -0.312"
-              ></a-entity>
-              <a-entity
-                id="nose"
-                geometry="primitive: cone; height: 0.15; radiusBottom: 0.1"
-                rotation="-90 0 0"
-                position="0 0 -0.4"
-                material="color: #373434; metalness: 0.66"
-              ></a-entity>
+      <a-entity face-arrangement="centerFace: 0">
+        <a-entity face-proxy="face: #face-0" position="0 0 0" rotation="0 0 0"></a-entity>
+        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+          <a-entity face-proxy="face: #face-5" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+            <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 180 0">
             </a-entity>
           </a-entity>
-          <script>
-            // For debugging purposes
-            // set global variable avatar to point to this avatar
-            const avatar = document.currentScript.closest("#avatar");
-          </script>
+          <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 -90 0" view-clip="from: 1">
+            <a-entity face-proxy="face: #face-5" position="0 0 -10" rotation="0 180 0" view-clip="from: 2">
+              <a-entity face-proxy="face: #face-3" position="10 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>
+            <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 -90 0" view-clip="from: 2">
+              <a-entity face-proxy="face: #face-5" position="-10 0 0" rotation="0 0 0"></a-entity>
+            </a-entity>
+          </a-entity>
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 0 0" view-clip="from: 4">
+          <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 90 0" view-clip="from: 2">
+            <a-entity face-proxy="face: #face-5" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+
+            </a-entity>
+            <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 90 0"></a-entity>
+          </a-entity>
+          <a-entity face-proxy="face: #face-5" position="0 0 -10" rotation="0 180 0" view-clip="from: 2">
+            <a-entity face-proxy="face: #face-1" position="-10 0 0" rotation="0 0 0" view-clip="from: 1"></a-entity>
+          </a-entity>
+        </a-entity>
+
+        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 0 0" view-clip="from: 1"></a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 0 0" view-clip="from: 2"></a-entity>
+
+
+
+      </a-entity>
+
+
+      <a-entity face-arrangement="centerFace: 1">
+        <a-entity face-proxy="face: #face-1" position="0 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="10 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 -90 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="-10 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 90 0">
+        </a-entity>
+      </a-entity>
+      <a-entity face-arrangement="centerFace: 2">
+        <a-entity face-proxy="face: #face-2" position="0 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 90 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="0 0 -10" rotation="0 180 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 -90 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="0 0 10" rotation="0 0 0">
+        </a-entity>
+      </a-entity>
+      <a-entity face-arrangement="centerFace: 3">
+        <a-entity face-proxy="face: #face-3" position="0 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="10 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 90 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="-10 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 -90 0">
+        </a-entity>
+      </a-entity>
+      <a-entity face-arrangement="centerFace: 4">
+        <a-entity face-proxy="face: #face-4" position="0 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 -90 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="0 0 -10" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 90 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="0 0 10" rotation="0 180 0">
+        </a-entity>
+      </a-entity>
+      <a-entity face-arrangement="centerFace: 5">
+        <a-entity face-proxy="face: #face-5" position="0 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-3" position="10 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 180 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-1" position="-10 0 0" rotation="0 0 0">
+        </a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 180 0">
+        </a-entity>
+      </a-entity>
+    </a-entity>
+
+    <a-entity id="faces-container" visible="false">
+      <!--custom-motion="velocity: 0.01 0 0.02"-->
+      <a-entity id="face-0">
+        <a-entity class="floor" geometry="primitive: plane; width: 10; height: 10"
+          material="color: green; side: double; roughness: 1; metalness: 0" rotation="90 0 0"></a-entity>
+        <a-entity class="orientingCone" geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+          material="color: green; roughness: 0.1; metalness: 0.7" rotation="90 0 0" position="0 0 -1"></a-entity>
+      </a-entity>
+
+      <a-entity id="face-1">
+        <a-entity class="floor" geometry="primitive: plane; width: 10; height: 10"
+          material="color: orange; side: double; roughness: 1; metalness: 0" rotation="90 0 0"></a-entity>
+        <a-entity class="orientingCone" geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+          material="color: orange; roughness: 0.1; metalness: 0.7" rotation="90 0 0" position="0 0 -1"></a-entity>
+      </a-entity>
+
+      <a-entity id="face-2">
+        <a-entity class="floor" geometry="primitive: plane; width: 10; height: 10"
+          material="color: blue; side: double; roughness: 1; metalness: 0" rotation="90 0 0"></a-entity>
+        <a-entity class="orientingCone" geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+          material="color: blue; roughness: 0.1; metalness: 0.7" rotation="90 0 0" position="0 0 -1"></a-entity>
+      </a-entity>
+
+      <a-entity id="face-3">
+        <a-entity class="floor" geometry="primitive: plane; width: 10; height: 10"
+          material="color: pink; side: double; roughness: 1; metalness: 0" rotation="90 0 0">
+        </a-entity>
+        <a-entity id="orientingCone" geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+          material="color: pink; roughness: 0.1; metalness: 0.7" rotation="90 0 0" position="0 0 -1"></a-entity>
+      </a-entity>
+
+      <a-entity id="face-4">
+        <a-entity class="floor" geometry="primitive: plane; width: 10; height: 10"
+          material="color: purple; side: double; roughness: 1; metalness: 0" rotation="90 0 0"></a-entity>
+        <a-entity id="orientingCone" geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+          material="color: purple; roughness: 0.1; metalness: 0.7" rotation="90 0 0" position="0 0 -1"></a-entity>
+      </a-entity>
+
+      <a-entity id="face-5">
+        <a-entity class="floor" geometry="primitive: plane; width: 10; height: 10"
+          material="color: red; side: double;  roughness: 1; metalness: 0" rotation="90 0 0">
+        </a-entity>
+        <a-entity class="orientingCone" geometry="primitive: cone; radiusBottom: 0; radiusTop: 1; height: 2"
+          material="color: red; roughness: 0.1; metalness: 0.7" rotation="90 0 0" position="0 0 -1"></a-entity>
+      </a-entity>
+    </a-entity>
+
+
+    <a-entity id="avatar" current-face="currentFace:0" custom-motion="velocity: 0.02 0 -0.05" visible="false"
+      position="0 1 0">
+      <a-entity face-sync-object>
+        <a-entity id="head" geometry="primitive: sphere; radius: 0.4" position="0 -0.2 +0.45" material="color: #c9baba">
+          <a-entity id="eyeR" geometry="primitive: sphere; radius: 0.06" material="color: #3c1616"
+            position="0.21243 0.15276 -0.3124"></a-entity>
+          <a-entity id="eyeR" geometry="primitive: sphere; radius: 0.06" material="color: #3c1616"
+            position="-0.212 0.153 -0.312"></a-entity>
+          <a-entity id="nose" geometry="primitive: cone; height: 0.15; radiusBottom: 0.1" rotation="-90 0 0"
+            position="0 0 -0.4" material="color: #373434; metalness: 0.66"></a-entity>
         </a-entity>
       </a-entity>
 
-      <a-entity id="rig-teleporter" controlled-face-tracker>
-        <a-entity
-          id="rig"
-          class="rig"
-          movement-controls
-          position="0 0 0"
-          rotation="0 0 0 "
-        >
-          <a-entity
-            id="camera"
-            class="camera"
-            look-controls
-            camera="fov: 55"
-            position="0 1.42 0"
-          >
-          </a-entity>
-          <script>
-            // DEBUG
-            const rig = document.currentScript.closest("#rig");
-            const camera = rig.querySelector("#camera");
-          </script>
-        </a-entity>
+
+
+
+
+    </a-entity>
+
+
+
+
+
+    <a-entity id="rig" class="rig" movement-controls position="0 0 0" rotation="0 0 0 ">
+      <a-entity id="camera" class="camera" look-controls camera="fov: 55" position="0 1.42 0">
       </a-entity>
-    </a-scene>
-  </body>
+    </a-entity>
+
+
+  </a-scene>
+</body>
+
 </html>
