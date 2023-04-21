@@ -19,11 +19,13 @@ AFRAME.registerComponent("face-camera-teleporter", {
   init: function () { 
 
     
+    
     if (this.el.getAttribute("debug")) {
       console.log("1", this.name,"on", this.el);
       console.log("faceArranger:", this.data.faceArranger )
-    }
-    this.tlf=newThrottledLogFunction(500);
+      this.tlf=newThrottledLogFunction(500);
+    }else{this.tlf = function(){};}
+    
 
   },
 
