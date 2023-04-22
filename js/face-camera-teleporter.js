@@ -13,19 +13,19 @@ AFRAME.registerComponent("face-camera-teleporter", {
   dependencies: ["current-face"],
   schema: {
     camera: { type: "selector", default: ":scope > .camera" },
-    faceArranger: {type: "selector", default: "a-entity[face-arranger]"}
+    faceArranger: { type: "selector", default: "a-entity[face-arranger]" }
   },
 
-  init: function () { 
+  init: function () {
 
-    
-    
+    //   this.el.setAttribute("debug",true);
+
     if (this.el.getAttribute("debug")) {
-      console.log("1", this.name,"on", this.el);
-      console.log("faceArranger:", this.data.faceArranger )
-      this.tlf=newThrottledLogFunction(500);
-    }else{this.tlf = function(){};}
-    
+      console.log("1", this.name, "on", this.el);
+      console.log("faceArranger:", this.data.faceArranger)
+      this.tlf = newThrottledLogFunction(500);
+    } else { this.tlf = function () { }; }
+
 
   },
 
@@ -34,13 +34,14 @@ AFRAME.registerComponent("face-camera-teleporter", {
   teleport: function (t, dt) {
     [this.el.currentFace, this.el.object3D.position, this.el.object3D.rotation]
       =
-      faceTransitionFuction(this.el.currentFace,this.el.object3D.position, this.el.object3D.rotation);
-    this.data.faceArranger.currentCenterFace=this.el.currentFace;
+      faceTransitionFuction(this.el.currentFace, this.el.object3D.position, this.el.object3D.rotation);
+    this.data.faceArranger.currentCenterFace = this.el.currentFace;
+    ;
   },
 
   tick: function (t, dt) {
     this.teleport(t, dt);
-    this.tlf([this.el.currentFace,this.el.object3D.position]);
+    this.tlf([this.el.currentFace, this.el.object3D.position, this.data.faceArranger.components["face-arrangement"]]);
   }
 
 });

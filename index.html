@@ -17,7 +17,7 @@
 
   <script src="js/face-tracker.js"></script>
   <script src="js/face-camera-teleporter.js"></script>
-
+  <script src="js/face-recurse.js"></script>
 
   <script src="js/custom-motion.js"></script>
 
@@ -29,96 +29,12 @@
 <body>
   <script src="transition-function.js"></script>
 
-  <a-scene fog="type: linear; color: #AAA; near: 2; far:50">
+  <a-scene fog="type: linear; color: #AAA; near: 2; far:20">
     <a-sky id="sky" color="#1A0A1A"></a-sky>
 
     <a-light color="#F0F0F0" position="-1 10 0"></a-light>
     <a-light type="ambient" color="#202020"></a-light>
 
-    <a-entity face-arranger="currentCenterFace: 0">
-
-      <a-entity face-arrangement="centerFace: 0" face-proxy="face: #face-0" position="0 0 0" rotation="0 0 0">
-        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
-        </a-entity>
-
-        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 0 0" view-clip="from: 4">
-        </a-entity>
-
-        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
-        </a-entity>
-
-        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 0 0" view-clip="from: 2">
-        </a-entity>
-      </a-entity>
-
-
-
-      <a-entity face-arrangement="centerFace: 1" face-proxy="face: #face-1" position="0 0 0" rotation="0 0 0">
-        <a-entity face-proxy="face: #face-5" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
-        </a-entity>
-        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 -90 0" view-clip="from: 1">
-        </a-entity>
-        <a-entity face-proxy="face: #face-0" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
-        </a-entity>
-        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 90 0" view-clip="from: 1">
-        </a-entity>
-      </a-entity>
-
-
-
-      <a-entity face-arrangement="centerFace: 2" face-proxy="face: #face-2" position="0 0 0" rotation="0 0 0">
-        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 90 0" view-clip="from: 2">
-        </a-entity>
-        <a-entity face-proxy="face: #face-5" position="0 0 -10" rotation="0 180 0" view-clip="from: 2">
-        </a-entity>
-        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 -90 0" view-clip="from: 2">
-        </a-entity>
-        <a-entity face-proxy="face: #face-0" position="0 0 10" rotation="0 0 0" view-clip="from: 2">
-        </a-entity>
-      </a-entity>
-
-
-
-
-      <a-entity face-arrangement="centerFace: 3" face-proxy="face: #face-3" position="0 0 0" rotation="0 0 0">
-        <a-entity face-proxy="face: #face-0" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
-        </a-entity>
-        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 90 0" view-clip="from: 3">
-        </a-entity>
-        <a-entity face-proxy="face: #face-5" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
-        </a-entity>
-        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 -90 0" view-clip="from: 3">
-        </a-entity>
-      </a-entity>
-
-
-
-      <a-entity face-arrangement="centerFace: 4" face-proxy="face: #face-4" position="0 0 0" rotation="0 0 0">
-        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 -90 0" view-clip="from: 4">
-        </a-entity>
-        <a-entity face-proxy="face: #face-0" position="0 0 -10" rotation="0 0 0" view-clip="from: 4">
-        </a-entity>
-        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 90 0" view-clip="from: 4">
-        </a-entity>
-        <a-entity face-proxy="face: #face-5" position="0 0 10" rotation="0 180 0" view-clip="from: 4">
-        </a-entity>
-      </a-entity>
-
-
-
-      <a-entity face-arrangement="centerFace: 5" face-proxy="face: #face-5" position="0 0 0" rotation="0 0 0">
-        <a-entity face-proxy="face: #face-3" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
-        </a-entity>
-        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 180 0" view-clip="from: 2">
-        </a-entity>
-        <a-entity face-proxy="face: #face-1" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
-        </a-entity>
-        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 180 0" view-clip="from: 4">
-        </a-entity>
-
-      </a-entity>
-
-    </a-entity>
 
     <a-entity id="faces-container" visible="false">
       <!--custom-motion="velocity: 0.01 0 0.02"-->
@@ -168,18 +84,157 @@
     </a-entity>
 
 
+    <a-entity face-arranger="currentCenterFace: 0">
+      <script>
+        const faceArranger = document.querySelector("[face-arranger]");
+      </script>
+
+      <a-entity face-arrangement="centerFace: 0" face-proxy="face: #face-0" position="0 0 0" rotation="0 0 0">
+        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+        </a-entity>
+
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 0 0" view-clip="from: 4">
+        </a-entity>
+
+        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
+        </a-entity>
+
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 0 0" view-clip="from: 2">
+        </a-entity>
+      </a-entity>
+
+
+      <a-entity face-arrangement="centerFace: 1" face-proxy="face: #face-1" position="0 0 0" rotation="0 0 0">
+        <a-entity face-proxy="face: #face-5" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 -90 0" view-clip="from: 1">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
+        </a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 90 0" view-clip="from: 1">
+        </a-entity>
+      </a-entity>
+
+
+
+      <a-entity face-arrangement="centerFace: 2" face-proxy="face: #face-2" position="0 0 0" rotation="0 0 0">
+        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 90 0" view-clip="from: 2">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="0 0 -10" rotation="0 180 0" view-clip="from: 2">
+        </a-entity>
+        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 -90 0" view-clip="from: 2">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="0 0 10" rotation="0 0 0" view-clip="from: 2">
+        </a-entity>
+      </a-entity>
+
+      <a-entity face-arrangement="centerFace: 3" face-proxy="face: #face-3" position="0 0 0" rotation="0 0 0">
+        <a-entity face-proxy="face: #face-0" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 90 0" view-clip="from: 3">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
+        </a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 -90 0" view-clip="from: 3">
+        </a-entity>
+      </a-entity>
+
+
+
+      <a-entity face-arrangement="centerFace: 4" face-proxy="face: #face-4" position="0 0 0" rotation="0 0 0">
+        <a-entity face-proxy="face: #face-1" position="10 0 0" rotation="0 -90 0" view-clip="from: 4">
+        </a-entity>
+        <a-entity face-proxy="face: #face-0" position="0 0 -10" rotation="0 0 0" view-clip="from: 4">
+        </a-entity>
+        <a-entity face-proxy="face: #face-3" position="-10 0 0" rotation="0 90 0" view-clip="from: 4">
+        </a-entity>
+        <a-entity face-proxy="face: #face-5" position="0 0 10" rotation="0 180 0" view-clip="from: 4">
+        </a-entity>
+      </a-entity>
+
+
+
+      <a-entity face-arrangement="centerFace: 5" face-proxy="face: #face-5" position="0 0 0" rotation="0 0 0">
+        <a-entity face-proxy="face: #face-3" position="10 0 0" rotation="0 0 0" view-clip="from: 3">
+        </a-entity>
+        <a-entity face-proxy="face: #face-2" position="0 0 -10" rotation="0 180 0" view-clip="from: 2">
+        </a-entity>
+        <a-entity face-proxy="face: #face-1" position="-10 0 0" rotation="0 0 0" view-clip="from: 1">
+        </a-entity>
+        <a-entity face-proxy="face: #face-4" position="0 0 10" rotation="0 180 0" view-clip="from: 4">
+        </a-entity>
+      </a-entity>
+
+    </a-entity>
+
+
+
 
 
     <a-entity id="rig" movement-controls position="0 0 0" rotation="0 0 0" face-camera-teleporter>
       <a-entity id="camera" look-controls camera="fov: 55" position="0 1.42 0">
       </a-entity>
       <script>
-        rig=document.currentScript.closest("#rig");
+        rig = document.currentScript.closest("#rig");
       </script>
     </a-entity>
 
 
   </a-scene>
+  <script>
+    document.querySelector('a-scene').addEventListener('loaded', function () {
+    for (el of document.querySelectorAll("a-entity[face-arrangement] > a-entity[face-proxy]")){
+      el.setAttribute("face-recurse","depth: 2");
+    }})
+  </script>
+  <script>
+    document.querySelector('a-scene').addEventListener('loaded', function () {
+
+      let faces = faceArranger.querySelectorAll(":scope > a-entity[face-arrangement]");
+      function getFaceChildren(face) {
+        return face.querySelectorAll(":scope > a-entity[face-proxy]")
+      }
+
+      function populateFace(innerFace) {
+        let proxiedFace = AFRAME.utils.styleParser.parse(AFRAME.utils.entity.getComponentProperty(innerFace, "face-proxy")).face.id;
+        let proxiedFaceNum = parseInt(proxiedFace.match(/face-(?<faceNum>[0-9]*)/).groups["faceNum"]);
+        let fromDirection = parseInt(AFRAME.utils.styleParser.parse(AFRAME.utils.entity.getComponentProperty(innerFace, "view-clip")).from);
+        console.log(fromDirection);
+
+        for (child of getFaceChildren(faces[proxiedFaceNum])) {
+          let badChild = false;
+          let position = AFRAME.utils.entity.getComponentProperty(child, "position")
+          console.log("fromDirection", fromDirection, "position:", position);
+          switch (fromDirection) {
+            case 1:
+              badChild = (position.x == 10 && position.z == 0);
+              break;
+            case 2:
+              badChild = (position.x == 0 && position.z == -10);
+              break;
+            case 3:
+              badChild = (position.x == 10 && position.z == 0);
+              break;
+            case 4:
+              badChild = (position.x == 0 && position.z == 10);
+              break;
+          }
+          console.log("badChild:", badChild);
+          if (!badChild) {
+            let newChild = child.cloneNode();
+            innerFace.appendChild(newChild);
+          }
+
+        }
+      };
+
+      /* for (innerFace of faceArranger.querySelectorAll(":scope > a-entity[face-arrangement]>a-entity[face-proxy]")) {
+        populateFace(innerFace)
+      };*/
+    
+    });
+  </script>
+
 </body>
 
 </html>

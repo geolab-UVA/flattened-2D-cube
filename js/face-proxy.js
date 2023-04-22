@@ -18,7 +18,8 @@ AFRAME.registerComponent("face-proxy", {
     schema: {
         face: { type: "selector" }
     },
-
+    
+    
     init: function () {
         let clonedNode = this.data.face.cloneNode();
         clonedNode.proxyMaster = this.data.face;
