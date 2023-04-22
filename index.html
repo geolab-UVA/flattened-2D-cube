@@ -174,8 +174,25 @@
     <a-entity id="rig" movement-controls position="0 0 0" rotation="0 0 0" face-camera-teleporter>
       <a-entity id="camera" look-controls camera="fov: 55" position="0 1.42 0">
       </a-entity>
+      <a-entity id="left-con" oculus-touch-controls="hand: left" ></a-entity>
+
+      <a-entity id="right-con" oculus-touch-controls="hand: right" ></a-entity>
+
+ <a-entity id="leftHand" hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"></a-entity>
+  <a-entity id="rightHand" hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc">
+<a-entity geometry="primitive:sphere; radius: 0.05"></a-entity>
+
+  </a-entity>
+
+<a-entity id="leftHand-tr" hand-tracking-controls="hand: left;"></a-entity>
+<a-entity id="rightHand-tr" hand-tracking-controls="hand: right;">
+  <a-entity geometry="primitive:sphere; radius: 0.05"></a-entity>
+
+</a-entity>
+
       <script>
-        rig = document.currentScript.closest("#rig");
+        let rig = document.currentScript.closest("#rig");
+        let camera = document.currentScript.closest("#camera");
       </script>
     </a-entity>
 
