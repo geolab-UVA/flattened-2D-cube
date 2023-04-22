@@ -1,6 +1,7 @@
 AFRAME.registerComponent("view-clip", {
   schema: {
     rig: { type: "selector", default: "#rig" },
+    camera: { type: "selector", default: "#camera" },
     from: { type: "int", default: 0 } // Counterclockwise starting from east
   },
 
@@ -99,7 +100,7 @@ AFRAME.registerComponent("view-clip", {
   },
 
   tick: function (t, dt) {
-    this.data.rig.object3D.getWorldPosition(this._cameraPos);
+    this.data.camera.object3D.getWorldPosition(this._cameraPos);
     for (planeNum = 0; planeNum < this.localClippingPlanes.length; planeNum++) {
       this.clippingVertexPairs[planeNum][0].getWorldPosition(this._B);
       this.clippingVertexPairs[planeNum][1].getWorldPosition(this._C);
