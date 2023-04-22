@@ -183,56 +183,10 @@
   </a-scene>
   <script>
     document.querySelector('a-scene').addEventListener('loaded', function () {
-    for (el of document.querySelectorAll("a-entity[face-arrangement] > a-entity[face-proxy]")){
-      el.setAttribute("face-recurse","depth: 2");
-    }})
-  </script>
-  <script>
-    document.querySelector('a-scene').addEventListener('loaded', function () {
-
-      let faces = faceArranger.querySelectorAll(":scope > a-entity[face-arrangement]");
-      function getFaceChildren(face) {
-        return face.querySelectorAll(":scope > a-entity[face-proxy]")
+      for (el of document.querySelectorAll("a-entity[face-arrangement] > a-entity[face-proxy]")) {
+        el.setAttribute("face-recurse", "depth: 2");
       }
-
-      function populateFace(innerFace) {
-        let proxiedFace = AFRAME.utils.styleParser.parse(AFRAME.utils.entity.getComponentProperty(innerFace, "face-proxy")).face.id;
-        let proxiedFaceNum = parseInt(proxiedFace.match(/face-(?<faceNum>[0-9]*)/).groups["faceNum"]);
-        let fromDirection = parseInt(AFRAME.utils.styleParser.parse(AFRAME.utils.entity.getComponentProperty(innerFace, "view-clip")).from);
-        console.log(fromDirection);
-
-        for (child of getFaceChildren(faces[proxiedFaceNum])) {
-          let badChild = false;
-          let position = AFRAME.utils.entity.getComponentProperty(child, "position")
-          console.log("fromDirection", fromDirection, "position:", position);
-          switch (fromDirection) {
-            case 1:
-              badChild = (position.x == 10 && position.z == 0);
-              break;
-            case 2:
-              badChild = (position.x == 0 && position.z == -10);
-              break;
-            case 3:
-              badChild = (position.x == 10 && position.z == 0);
-              break;
-            case 4:
-              badChild = (position.x == 0 && position.z == 10);
-              break;
-          }
-          console.log("badChild:", badChild);
-          if (!badChild) {
-            let newChild = child.cloneNode();
-            innerFace.appendChild(newChild);
-          }
-
-        }
-      };
-
-      /* for (innerFace of faceArranger.querySelectorAll(":scope > a-entity[face-arrangement]>a-entity[face-proxy]")) {
-        populateFace(innerFace)
-      };*/
-    
-    });
+    })
   </script>
 
 </body>
